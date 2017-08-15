@@ -24,9 +24,10 @@ var map = new ol.Map({
   })
 });
 
-var app={
+var app = {
   mapzenKey: 'mapzen-CpAANqF',
   activeSearch: 'from',
+  
   typeAhead: function(e){
   var el = e.target;
   var val = el.value;
@@ -34,6 +35,4 @@ var app={
   }
 }
 
-$('#search-from-input').on('keyup', {input:'from'},
-app.typeAhead);
-
+$('#search-from-input').on('keyup', {input:'from'}, app.typeAhead);
