@@ -24,18 +24,44 @@ var map = new ol.Map({
   })
 });
 
-var app = {
-  mapzenKey: 'mapzen-CpAANqF',
-  activeSearch: 'from',
-  
   typeAhead: function(e){
-  var el = e.target;
-  var val = el.value;
-  console.log(val);
-  }, 
+    var el = e.target;
+    var val = el.value;
+    if(val.length > 2){
+      app.queryAutocomplete(val, function(err, data){
+        // step 1
+        if(err) return console.log(err);
+
+        // step 2
+        if(data.features) app.options = data.features;
+
+        // step 3
+        app.renderResultsList();
+      })
+    }
+  }
   
-  queryAutocomplete: throttle(function(){}, 150)
-    
+  queryAutocomplete: throttle(function(text, callback){
+    $.ajax({
+      url: 'https://search.mapzen.com/v1/autocomplete?text=' + text + '&api_key=' + app.mapzenKey, 
+      success: function(data, status, req){
+        callback(null, data);
+      },
+      error: function(req, status, err){
+        callback(err)
+      }
+    })
+  }, 150)
+	renderResultList: function(){
+      var resultsList = $('#results-list');
+      resultsList.empty();
+      
+      var results = app.options.map(function(feature){
+      	var li = $('<li class = "results-list-item">' + feature.properties.label + '</li>');
+        
+      return li;
+      })
+	}
 }
 
 $('#search-from-input').on('keyup', {input:'from'}, app.typeAhead);
