@@ -32,7 +32,10 @@ var app = {
   var el = e.target;
   var val = el.value;
   console.log(val);
-  }
+  }, 
+  
+  queryAutocomplete: throttle(function(){}, 150)
+    
 }
 
 $('#search-from-input').on('keyup', {input:'from'}, app.typeAhead);
